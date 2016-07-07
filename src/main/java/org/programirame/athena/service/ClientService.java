@@ -1,6 +1,7 @@
 package org.programirame.athena.service;
 
 import org.programirame.athena.models.Client;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,16 +14,18 @@ import java.util.List;
 @Service
 public class ClientService {
 
+    public RestTemplate restTemplate = new RestTemplate();
+    @Value("${path.clients}")
+    private String pathClients;
+    @Value("${url.host}")
+    private String hostUrl;
+
     public List<Client> getAllClients() throws URISyntaxException {
-        RestTemplate restTemplate = new RestTemplate();
 
-        URI url = new URI("http://localhost:4348/clients");
-
+        URI url = new URI(hostUrl + pathClients);
         ResponseEntity<Client[]> response = restTemplate.getForEntity(url, Client[].class);
-        System.out.println("Status code: "+response.getStatusCode().toString());
         Client[] clients = response.getBody();
 
         return Arrays.asList(clients);
     }
-
 }

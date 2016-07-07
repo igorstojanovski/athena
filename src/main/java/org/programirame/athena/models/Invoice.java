@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -64,13 +63,5 @@ public class Invoice {
 
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
-    }
-
-    public Invoice() {
-    }
-
-    public Invoice(BigDecimal amount, Date invoiceDate) {
-        this.amount = amount;
-        this.invoiceDate = invoiceDate;
     }
 }

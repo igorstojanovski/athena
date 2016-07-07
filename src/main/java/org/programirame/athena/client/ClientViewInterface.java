@@ -1,7 +1,14 @@
 package org.programirame.athena.client;
 
-/**
- * Created by igorce on 07.07.16..
- */
+
+import org.programirame.athena.models.Client;
+import org.programirame.athena.models.Invoice;
+
+import java.util.List;
+
 public interface ClientViewInterface {
+
+    void refreshInvoices(List<Invoice> invoices);
+
+    void refreshClient(List<Client> clients);
 }

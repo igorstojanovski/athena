@@ -22,10 +22,12 @@ public class InvoiceService {
     private String hostUrl;
 
     public List<Invoice> getAllClientInvoices(long id) throws URISyntaxException {
+
+        System.out.println("URL : "+hostUrl + urlInvoices + "?clientId=" + id);
+
         URI url = new URI(hostUrl + urlInvoices + "?clientId=" + id);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> resp = restTemplate.getForEntity(url, String.class);
         Invoice[] response = restTemplate.getForObject(url, Invoice[].class);
 
         return Arrays.asList(response);

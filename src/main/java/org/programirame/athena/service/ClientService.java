@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -20,12 +21,32 @@ public class ClientService {
     @Value("${url.host}")
     private String hostUrl;
 
-    public List<Client> getAllClients() throws URISyntaxException {
+    public List<Client> getAllClients() {
+        Client[] clients = new Client[0];
 
-        URI url = new URI(hostUrl + pathClients);
-        ResponseEntity<Client[]> response = restTemplate.getForEntity(url, Client[].class);
-        Client[] clients = response.getBody();
+        try {
+            URI url = new URI(hostUrl + pathClients);
+            ResponseEntity<Client[]> response = restTemplate.getForEntity(url, Client[].class);
+            clients = response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return Arrays.asList(clients);
+    }
+
+    public Client getClient(long clientId) {
+
+        Client client = null;
+
+        try {
+            URI url = new URI(hostUrl + pathClients+"/"+clientId);
+            ResponseEntity<Client> response = restTemplate.getForEntity(url, Client.class);
+            client = response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return client;
     }
 }

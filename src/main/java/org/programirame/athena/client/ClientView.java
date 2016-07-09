@@ -1,12 +1,11 @@
 package org.programirame.athena.client;
 
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
 import org.programirame.athena.models.Client;
@@ -31,38 +30,22 @@ public class ClientView extends VerticalLayout implements View, ClientViewInterf
 
     private BeanItemContainer<Invoice> invoicesContainer;
     private Grid invoiceGrid;
-    private ComboBox clientCombo;
+    private String clientParameter;
 
     @PostConstruct
     public void init() throws URISyntaxException {
 
         initializeGrid();
 
-        initializeClientCombo();
-
-        addComponent(clientCombo);
         addComponent(invoiceGrid);
 
     }
 
-    private void initializeClientCombo() {
-        clientCombo = new ComboBox("Clients", new ArrayList<>());
-        clientCombo.setItemCaptionPropertyId("name");
-
-        clientCombo.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
-                Client client = (Client) valueChangeEvent.getProperty().getValue();
-                System.out.println("NUmber of listeners: " + listeners.size());
-                for (ClientViewListener listener : listeners) {
-                    System.out.println("Notify Listeners!");
-                    listener.clientSelected(client);
-                }
-            }
-        });
-    }
-
     private void initializeGrid() {
+
+        System.out.println("====> URI FRAGMENT IS "+Page.getCurrent().getUriFragment());
+
+
         invoiceGrid = new Grid();
         invoicesContainer = new BeanItemContainer<>(Invoice.class, new ArrayList<>());
         invoiceGrid.setContainerDataSource(invoicesContainer);
@@ -92,11 +75,10 @@ public class ClientView extends VerticalLayout implements View, ClientViewInterf
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        listeners.forEach(listener -> listener.viewInitialized(this));
-    }
+        clientParameter = viewChangeEvent.getParameters();
+        System.out.println("parameter: "+viewChangeEvent.getParameters());
 
-    public void addListener(ClientViewListener listener) {
-        listeners.add(listener);
+        listeners.forEach(listener -> listener.viewInitialized(this));
     }
 
     @Override
@@ -106,10 +88,7 @@ public class ClientView extends VerticalLayout implements View, ClientViewInterf
     }
 
     @Override
-    public void refreshClient(List<Client> clients) {
-        BeanItemContainer<Client> clientsContainer = new BeanItemContainer<>(Client.class, clients);
-
-        clientCombo.removeAllItems();
-        clientCombo.setContainerDataSource(clientsContainer);
+    public String getClientParameter() {
+        return clientParameter;
     }
 }

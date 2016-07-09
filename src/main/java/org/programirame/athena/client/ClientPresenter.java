@@ -3,7 +3,6 @@ package org.programirame.athena.client;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import org.programirame.athena.models.Client;
 import org.programirame.athena.models.Invoice;
 import org.programirame.athena.service.ClientService;
 import org.programirame.athena.service.InvoiceService;
@@ -18,6 +17,9 @@ import java.util.List;
 class ClientPresenter implements ClientViewListener {
 
     @Autowired
+    ClientViewAggregate clientAggregate;
+
+    @Autowired
     private InvoiceService invoiceService;
 
     private ClientViewInterface clientView;
@@ -26,34 +28,19 @@ class ClientPresenter implements ClientViewListener {
     private ClientService clientService;
 
     @Override
-    public void clientSelected(Client client) {
+    public void viewInitialized(ClientViewInterface clientView) {
+
+        long clientId = Long.valueOf(clientView.getClientParameter().split("/")[0]);
+        clientAggregate.setSelectedClient(clientId);
+
         List<Invoice> invoices = new ArrayList<>();
+
         try {
-            invoices = invoiceService.getAllClientInvoices(client.getId());
+            invoices = invoiceService.getAllClientInvoices(clientId);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
         clientView.refreshInvoices(invoices);
-    }
-
-    @Override
-    public void viewInitialized(ClientView clientView) {
-        this.clientView = clientView;
-        List<Client> clients = new ArrayList<>();
-        try {
-            clients = clientService.getAllClients();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        clientView.refreshClient(clients);
-    }
-
-    public InvoiceService getInvoiceService() {
-        return invoiceService;
-    }
-
-    public void setInvoiceService(InvoiceService invoiceService) {
-        this.invoiceService = invoiceService;
     }
 }

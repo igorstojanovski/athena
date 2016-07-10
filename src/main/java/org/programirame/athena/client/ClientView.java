@@ -4,16 +4,19 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.programirame.athena.models.Client;
+import org.programirame.athena.models.ClientType;
 import org.programirame.athena.models.Invoice;
 import org.programirame.athena.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,28 +26,22 @@ import java.util.Locale;
 public class ClientView extends VerticalLayout implements View, ClientViewInterface {
 
     @Autowired
-    ClientService clientService;
-
-    @Autowired
     List<ClientViewListener> listeners;
 
     private BeanItemContainer<Invoice> invoicesContainer;
     private Grid invoiceGrid;
     private String clientParameter;
+    private ClientInfoSection clientInfo;
 
     @PostConstruct
     public void init() throws URISyntaxException {
-
         initializeGrid();
-
-        addComponent(invoiceGrid);
+        clientInfo = new ClientInfoSection();
 
     }
 
     private void initializeGrid() {
-
-        System.out.println("====> URI FRAGMENT IS "+Page.getCurrent().getUriFragment());
-
+        setSpacing(true);
 
         invoiceGrid = new Grid();
         invoicesContainer = new BeanItemContainer<>(Invoice.class, new ArrayList<>());
@@ -76,9 +73,10 @@ public class ClientView extends VerticalLayout implements View, ClientViewInterf
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         clientParameter = viewChangeEvent.getParameters();
-        System.out.println("parameter: "+viewChangeEvent.getParameters());
-
         listeners.forEach(listener -> listener.viewInitialized(this));
+
+        addComponent(clientInfo);
+        addComponent(invoiceGrid);
     }
 
     @Override
@@ -90,5 +88,10 @@ public class ClientView extends VerticalLayout implements View, ClientViewInterf
     @Override
     public String getClientParameter() {
         return clientParameter;
+    }
+
+    @Override
+    public void refreshClientInfo(Client client) {
+        clientInfo.refreshClientInfo(client);
     }
 }

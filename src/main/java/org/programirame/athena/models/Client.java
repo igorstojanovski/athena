@@ -1,22 +1,21 @@
 package org.programirame.athena.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@clientId")
 public class Client {
 
     private String externalId;
     private String name;
+    private String surname;
+    private String taxNumber;
+    private String uid;
+
     private long id;
-    private List<Invoice> invoices;
-    private List<Email> emails;
-    private List<Address> addresses;
+    private ClientType type;
 
     public Client() {
     }
@@ -25,6 +24,7 @@ public class Client {
         this.externalId = externalId;
         this.name = name;
     }
+
 
     public long getId() {
         return id;
@@ -50,27 +50,35 @@ public class Client {
         this.name = name;
     }
 
-    public List<Invoice> getInvoices() {
-        return invoices;
+    public ClientType getType() {
+        return type;
     }
 
-    public void setInvoices(List<Invoice> invoices) {
-        this.invoices = invoices;
+    public void setType(ClientType type) {
+        this.type = type;
     }
 
-    public List<Email> getEmails() {
-        return emails;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setEmails(List<Email> emails) {
-        this.emails = emails;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
+    public String getTaxNumber() {
+        return taxNumber;
     }
 
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

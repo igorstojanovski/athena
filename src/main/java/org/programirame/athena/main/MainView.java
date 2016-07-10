@@ -26,7 +26,7 @@ public class MainView extends VerticalLayout implements View, MainViewInterface 
 
     @PostConstruct
     public void init() {
-
+        setSpacing(true);
         Button clientButton = getClientButton();
         clientCombo = getClientCombo();
 
@@ -43,7 +43,6 @@ public class MainView extends VerticalLayout implements View, MainViewInterface 
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                                 for (MainViewListenerInterface listener : mainViewListeners) {
-                    System.out.println("Notify Listeners!");
                     listener.clientSelected(selectedClient);
                 }
             }
@@ -69,8 +68,6 @@ public class MainView extends VerticalLayout implements View, MainViewInterface 
     @Override
     public void refreshClientsCombo(List<Client> clients) {
         BeanItemContainer<Client> clientsContainer = new BeanItemContainer<>(Client.class, clients);
-        System.out.println("======+> Refreshing client combo!");
-        System.out.println("NUmber of clients: "+clients.size());
         clientCombo.removeAllItems();
         clientCombo.setContainerDataSource(clientsContainer);
     }

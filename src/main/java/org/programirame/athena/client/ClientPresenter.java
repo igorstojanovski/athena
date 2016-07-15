@@ -5,6 +5,8 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import org.programirame.athena.models.Client;
 import org.programirame.athena.models.Invoice;
+import org.programirame.athena.models.address.Address;
+import org.programirame.athena.service.AddressService;
 import org.programirame.athena.service.ClientService;
 import org.programirame.athena.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ class ClientPresenter implements ClientViewListener {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    AddressService addressService;
+
     @Override
     public void viewInitialized(ClientViewInterface clientView) {
 
@@ -46,5 +51,13 @@ class ClientPresenter implements ClientViewListener {
 
         clientView.refreshInvoices(invoices);
         clientView.refreshClientInfo(client);
+
+        List<Address> addresses;
+
+        addresses = addressService.getAddresses(clientId);
+
+        System.out.println("Number of addresses: "+addresses.size());
+
+        clientView.refreshContactInfo(addresses);
     }
 }

@@ -1,9 +1,5 @@
 package org.programirame.athena.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 public class ClientType {
 
     private long id;

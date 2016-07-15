@@ -4,19 +4,17 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.FileResource;
-import com.vaadin.server.Page;
-import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
 import org.programirame.athena.models.Client;
-import org.programirame.athena.models.ClientType;
 import org.programirame.athena.models.Invoice;
-import org.programirame.athena.service.ClientService;
+import org.programirame.athena.models.address.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +30,17 @@ public class ClientView extends VerticalLayout implements View, ClientViewInterf
     private Grid invoiceGrid;
     private String clientParameter;
     private ClientInfoSection clientInfo;
+    private ClientContactSection clientContact;
+    private TabSheet clientTabsheet;
 
     @PostConstruct
     public void init() throws URISyntaxException {
         initializeGrid();
-        clientInfo = new ClientInfoSection();
+        clientTabsheet = new TabSheet();
+        clientTabsheet.setHeight("300px");
 
+        clientInfo = new ClientInfoSection();
+        clientContact = new ClientContactSection();
     }
 
     private void initializeGrid() {
@@ -75,14 +78,26 @@ public class ClientView extends VerticalLayout implements View, ClientViewInterf
         clientParameter = viewChangeEvent.getParameters();
         listeners.forEach(listener -> listener.viewInitialized(this));
 
-        addComponent(clientInfo);
-        addComponent(invoiceGrid);
+        Panel invoicesPanel = new Panel("Invoices", invoiceGrid);
+
+        clientTabsheet.addTab(clientInfo, "Basic Info");
+        clientTabsheet.addTab(clientContact, "Contact");
+
+        addComponent(clientTabsheet);
+        addComponent(invoicesPanel);
     }
 
     @Override
     public void refreshInvoices(List<Invoice> invoices) {
         invoicesContainer.removeAllItems();
         invoicesContainer.addAll(invoices);
+    }
+
+    @Override
+    public void refreshContactInfo(List<Address> addresses) {
+
+        clientContact.refreshContactInfo(addresses);
+
     }
 
     @Override

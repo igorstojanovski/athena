@@ -1,6 +1,7 @@
 package org.programirame.athena.client;
 
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import org.programirame.athena.models.Client;
@@ -29,8 +30,10 @@ public class ClientInfoSection extends FormLayout {
     public void refreshClientInfo(Client client) {
         nameTextField.setValue(client.getName());
         surnameTextField.setValue(client.getSurname());
+
         uidTextField.setValue(client.getUid());
         uidTextField.setIcon(FontAwesome.KEY);
+
         taxNumberTextField.setValue(client.getTaxNumber());
         taxNumberTextField.setIcon(FontAwesome.DOLLAR);
 

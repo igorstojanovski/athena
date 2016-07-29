@@ -1,21 +1,11 @@
-package org.programirame.athena.models.address;
+package org.programirame.athena.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class AddressType {
+public class EmailTemplate {
 
-    private long id;
     private String name;
     private String description;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    private String content;
 
     public String getName() {
         return name;
@@ -31,5 +21,13 @@ public class AddressType {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

@@ -1,7 +1,5 @@
 package org.programirame.athena.models;
 
-import javax.persistence.*;
-
 public class Email {
     private long id;
     private String email;

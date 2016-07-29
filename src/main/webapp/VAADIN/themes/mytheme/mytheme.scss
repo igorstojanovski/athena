@@ -29,10 +29,57 @@
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
+$v-layout-margin-top : 15px;
+$v-layout-margin-right : 15px;
+$v-layout-margin-bottom : 15px;
+$v-layout-margin-left : 15px;
+
 @import "../valo/valo.scss";
 
 @mixin mytheme {
   @include valo;
 
-  // Insert your own theme rules here
+  .v-formlayout .v-caption {
+
+      font-size: 30px;
+  }
+
+  .tool-belt {
+    float: right;
+    clear: both;
+  	margin: 10px 5px 5px 10px !important;
+  	padding-bottom: 0px;
+  	padding-right: 0px;
+  }
+
+  .send-email-button-layout {
+      float: right;
+      clear: both;
+      padding: 5px 5px 5px 5px;
+  }
+
+  .send-email-display-layout {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+  }
+
+
+  .v-slot-send-email-templates-list {
+    width: 150px;
+  }
+
+  .send-email-preview-panel {
+    padding-left: 10px;
+  }
+
+  .send-email-preview-counter {
+    text-align: center;
+  }
+
+  .send-email-send-button {
+    float: right;
+    clean: both;
+  }
 }

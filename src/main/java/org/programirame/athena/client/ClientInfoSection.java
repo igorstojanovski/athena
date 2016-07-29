@@ -1,7 +1,6 @@
 package org.programirame.athena.client;
 
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import org.programirame.athena.models.Client;

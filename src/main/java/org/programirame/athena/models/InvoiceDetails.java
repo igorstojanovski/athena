@@ -1,7 +1,5 @@
 package org.programirame.athena.models;
 
-import javax.persistence.*;
-
 public class InvoiceDetails {
     private long id;
     private Invoice invoiceId;

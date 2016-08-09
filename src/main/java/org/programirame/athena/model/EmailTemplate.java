@@ -3,9 +3,13 @@ package org.programirame.athena.model;
 
 public class EmailTemplate {
 
+
     private String name;
     private String description;
     private String content;
+    private String subject;
+    private String type;
+
 
     public String getName() {
         return name;
@@ -29,5 +33,21 @@ public class EmailTemplate {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }

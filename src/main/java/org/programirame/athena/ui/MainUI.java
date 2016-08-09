@@ -3,8 +3,11 @@ package org.programirame.athena.ui;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewProvider;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.*;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -34,15 +37,33 @@ public class MainUI extends UI {
         root.setSpacing(true);
         setContent(root);
 
+
+
+
+
+
         final Panel viewContainer = new Panel();
         viewContainer.setSizeFull();
-        root.addComponent(viewContainer);
-        root.setExpandRatio(viewContainer, 1.0f);
+
 
         // Create a navigator to control the views
         Navigator navigator = new Navigator(this, viewContainer);
 
         // Create and register the views
+        MenuBar barmenu = new MenuBar();
+        Command command = new Command() {
+            @Override
+            public void menuSelected(MenuItem menuItem) {
+                navigator.navigateTo("search");
+
+            }
+        };
+
+        MenuItem search = barmenu.addItem("Search", FontAwesome.SEARCH, command);
+
+        root.addComponent(barmenu);
+        root.addComponent(viewContainer);
+        root.setExpandRatio(viewContainer, 1.0f);
         navigator.addProvider(viewProvider);
     }
 }

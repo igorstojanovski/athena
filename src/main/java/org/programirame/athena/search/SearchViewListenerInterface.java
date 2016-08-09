@@ -1,7 +1,7 @@
 package org.programirame.athena.search;
 
 
-public interface SearchViewListener {
+public interface SearchViewListenerInterface {
 
     void search(String searchQuery);
 

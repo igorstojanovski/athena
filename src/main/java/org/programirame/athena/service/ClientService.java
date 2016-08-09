@@ -1,6 +1,7 @@
 package org.programirame.athena.service;
 
 import org.programirame.athena.model.Clients;
+import org.programirame.athena.model.Invoice;
 import org.programirame.athena.model.SearchQuery;
 import org.programirame.athena.models.Client;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,6 +75,17 @@ public class ClientService {
             ResponseEntity<Clients[]> response = restTemplate.exchange(searchQueryRequestEntity, Clients[].class);
 
             clients = response.getBody();
+
+            for(Clients client:clients) {
+                List<Invoice> invoices = client.getInvoice();
+
+                for(Invoice invoice:invoices) {
+                    invoice.getAdditionalProperties().put("outstanding",
+                            invoice.getInvoiceAmount().subtract(invoice.getInvoicePayedAmount()));
+                    invoice.getAdditionalProperties().put("email",
+                            client.getEmail());
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

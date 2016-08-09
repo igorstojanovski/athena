@@ -146,4 +146,5 @@ public class Invoice {
         this.additionalProperties.put(name, value);
     }
 
+
 }

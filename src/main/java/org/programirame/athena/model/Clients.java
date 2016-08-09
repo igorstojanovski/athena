@@ -42,6 +42,8 @@ public class Clients {
     private Object payments;
     @JsonProperty("type")
     private Type type;
+    @JsonProperty("email")
+    private String email;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -203,6 +205,16 @@ public class Clients {
     @JsonProperty("type")
     public void setType(Type type) {
         this.type = type;
+    }
+
+    @JsonProperty("email")
+    public String getEmail() {
+        return email;
+    }
+
+    @JsonProperty("email")
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @JsonAnyGetter

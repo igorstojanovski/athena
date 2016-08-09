@@ -6,12 +6,11 @@ import org.programirame.athena.model.Clients;
 import org.programirame.athena.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @UIScope
 @SpringComponent
-public class SearchViewPresenter implements SearchViewListener {
+public class SearchViewPresenter implements SearchViewListenerInterface {
 
     private SearchViewInterface searchViewInterface;
 

@@ -62,11 +62,6 @@ $v-selection-item-border-radius: 0;
 @mixin mytheme {
   @include valo;
 
-  .v-formlayout .v-caption {
-
-      font-size: 30px;
-  }
-
   .tool-belt {
     float: right;
     clear: both;

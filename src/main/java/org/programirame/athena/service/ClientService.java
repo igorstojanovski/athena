@@ -1,11 +1,11 @@
 package org.programirame.athena.service;
 
+import org.programirame.athena.model.ClientSearchResult;
 import org.programirame.athena.model.Clients;
 import org.programirame.athena.model.Invoice;
 import org.programirame.athena.model.SearchQuery;
 import org.programirame.athena.models.Client;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,13 +48,14 @@ public class ClientService {
         return Arrays.asList(clients);
     }
 
-    public Client getClient(long clientId) {
+    public Clients getClient(String clientId) {
 
-        Client client = null;
+        Clients client = null;
 
         try {
-            URI url = new URI(hostUrl + pathClients+"/"+clientId);
-            ResponseEntity<Client> response = restTemplate.getForEntity(url, Client.class);
+            System.out.println("URL: "+searchUrl + pathSearch + pathClients+"/"+clientId);
+            URI url = new URI(searchUrl + pathSearch + pathClients+"/"+clientId);
+            ResponseEntity<Clients> response = restTemplate.getForEntity(url, Clients.class);
             client = response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,9 +64,10 @@ public class ClientService {
         return client;
     }
 
-    public List<Clients> searchClients(String searchQuery) {
-        Clients[] clients = new Clients[0];
+    public ClientSearchResult searchClients(String searchQuery) {
 
+
+        ClientSearchResult result = new ClientSearchResult();
         try {
             URI url = new URI(searchUrl + pathSearch + pathClients);
             SearchQuery query = new SearchQuery();
@@ -72,11 +75,11 @@ public class ClientService {
 
             RequestEntity<SearchQuery> searchQueryRequestEntity = new RequestEntity<>(query, HttpMethod.POST, url);
 
-            ResponseEntity<Clients[]> response = restTemplate.exchange(searchQueryRequestEntity, Clients[].class);
+            ResponseEntity<ClientSearchResult> response = restTemplate.exchange(searchQueryRequestEntity, ClientSearchResult.class);
 
-            clients = response.getBody();
+            result = response.getBody();
 
-            for(Clients client:clients) {
+            for(Clients client:result.getClients()) {
                 List<Invoice> invoices = client.getInvoice();
 
                 for(Invoice invoice:invoices) {
@@ -92,6 +95,6 @@ public class ClientService {
         }
 
 
-        return Arrays.asList(clients);
+        return result;
     }
 }

@@ -3,8 +3,8 @@ package org.programirame.athena.client;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import org.programirame.athena.models.Client;
-import org.programirame.athena.models.Invoice;
+import org.programirame.athena.model.Clients;
+import org.programirame.athena.model.Invoice;
 import org.programirame.athena.models.address.Address;
 import org.programirame.athena.service.AddressService;
 import org.programirame.athena.service.ClientService;
@@ -36,25 +36,22 @@ class ClientPresenter implements ClientViewListener {
     @Override
     public void viewInitialized(ClientViewInterface clientView) {
 
-        long clientId = Long.valueOf(clientView.getClientParameter().split("/")[0]);
-        Client client = clientService.getClient(clientId);
+        String clientId = clientView.getClientParameter().split("/")[0];
+        Clients client = clientService.getClient(clientId);
 
         clientAggregate.setSelectedClient(clientId);
 
-        List<Invoice> invoices = new ArrayList<>();
 
-        try {
-            invoices = invoiceService.getAllClientInvoices(clientId);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        List<Invoice> invoices = clientAggregate.getSelectedClient().getInvoice();
 
         clientView.refreshInvoices(invoices);
         clientView.refreshClientInfo(client);
 
-        List<Address> addresses;
+        List<Address> addresses = new ArrayList<>();
 
-        addresses = addressService.getAddresses(clientId);
+//        addresses = addressService.getAddresses(clientId);
+
+
 
         System.out.println("Number of addresses: "+addresses.size());
 

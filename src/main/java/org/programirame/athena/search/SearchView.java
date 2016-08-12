@@ -6,6 +6,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
@@ -14,6 +15,7 @@ import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
 import org.programirame.athena.contact.email.EmailWindow;
 import org.programirame.athena.contact.email.EmailWindowPresenter;
+import org.programirame.athena.model.Bucket;
 import org.programirame.athena.model.Clients;
 import org.programirame.athena.model.Invoice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.vaadin.ui.themes.ValoTheme.BUTTON_LINK;
 
 @SpringView(name = "search")
 public class SearchView extends VerticalLayout implements View, SearchViewInterface {
@@ -46,6 +50,8 @@ public class SearchView extends VerticalLayout implements View, SearchViewInterf
     private Button clientViewButton;
     private Button contactClientsButton;
     private ComboBox searchFiltersCombo;
+    private HorizontalLayout resultsHLayout;
+    private VerticalLayout bucketsVLayout;
 
     @PostConstruct
     public void init() {
@@ -53,6 +59,15 @@ public class SearchView extends VerticalLayout implements View, SearchViewInterf
         initializeToolBelt();
         initializeClientsGrid();
         initializeInvoicesGrid();
+
+        resultsHLayout = new HorizontalLayout();
+        bucketsVLayout = new VerticalLayout();
+        bucketsVLayout.setWidth("160px");
+
+        resultsHLayout.addComponent(bucketsVLayout);
+        resultsHLayout.setWidth("100%");
+
+        addComponent(resultsHLayout);
     }
 
     private void initializeInvoicesGrid() {
@@ -180,8 +195,10 @@ public class SearchView extends VerticalLayout implements View, SearchViewInterf
 
                 invoicesGrid.getFooterRow(1).getCell("additionalProperties").setText(getTotalDebtValue(invoicesContainer));
 
-                removeComponent(clientsGrid);
-                addComponent(invoicesGrid);
+
+                resultsHLayout.removeComponent(clientsGrid);
+                resultsHLayout.addComponent(invoicesGrid);
+                resultsHLayout.setExpandRatio(invoicesGrid, 1.0f);
             }
         });
 
@@ -194,8 +211,9 @@ public class SearchView extends VerticalLayout implements View, SearchViewInterf
                 toolBeltLayout.removeComponent(clientViewButton);
                 toolBeltLayout.addComponent(invoiceViewButton);
                 changeState(SearchViewState.CLIENT);
-                removeComponent(invoicesGrid);
-                addComponent(clientsGrid);
+                resultsHLayout.removeComponent(invoicesGrid);
+                resultsHLayout.addComponent(clientsGrid);
+                resultsHLayout.setExpandRatio(clientsGrid, 1.0f);
             }
         });
 
@@ -252,7 +270,7 @@ public class SearchView extends VerticalLayout implements View, SearchViewInterf
         clientsGrid.getColumn("invoice").setRenderer(new NumberRenderer(), new Converter<Integer, List<Invoice>>() {
             @Override
             public List<Invoice> convertToModel(Integer integer, Class<? extends List<Invoice>> aClass, Locale locale) throws ConversionException {
-                return new ArrayList<Invoice>();
+                return new ArrayList<>();
             }
 
             @Override
@@ -295,7 +313,6 @@ public class SearchView extends VerticalLayout implements View, SearchViewInterf
                     } else if (!searchField.getValue().contains("DueDateIn")) {
                         searchField.setValue(searchField.getValue() + ",DueDateIn=");
                     }
-
                 }
 
                 searchFiltersCombo.select(searchFiltersCombo.getNullSelectionItemId());
@@ -331,14 +348,36 @@ public class SearchView extends VerticalLayout implements View, SearchViewInterf
 
         changeState(SearchViewState.CLIENT);
 
-        removeComponent(clientsGrid);
-        removeComponent(invoicesGrid);
+        resultsHLayout.removeComponent(clientsGrid);
+        resultsHLayout.removeComponent(invoicesGrid);
         removeComponent(toolBeltLayout);
         toolBeltLayout.removeComponent(clientViewButton);
         toolBeltLayout.addComponent(invoiceViewButton);
 
+        resultsHLayout.addComponent(clientsGrid);
         addComponent(toolBeltLayout);
-        addComponent(clientsGrid);
+        addComponent(resultsHLayout);
+
+        resultsHLayout.setExpandRatio(clientsGrid, 1.0f);
+    }
+
+    @Override
+    public void refreshAggregates(List<Bucket> buckets) {
+        bucketsVLayout.removeAllComponents();
+
+        if (buckets.size() > 0) {
+            for (Bucket bucket : buckets) {
+                Button b = new Button(bucket.getBucketName() + "(" + bucket.getBucketCount() + ")");
+                b.setStyleName(BUTTON_LINK);
+                b.addClickListener((Button.ClickListener) clickEvent -> {
+                    if (!searchField.getValue().contains(",City=" + bucket.getBucketName())) {
+                        searchField.setValue(searchField.getValue() + ",City=" + bucket.getBucketName());
+                        searchButton.click();
+                    }
+                });
+                bucketsVLayout.addComponent(b);
+            }
+        }
     }
 
     public void changeState(SearchViewState newState) {

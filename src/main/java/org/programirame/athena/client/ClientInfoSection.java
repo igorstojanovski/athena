@@ -2,8 +2,9 @@ package org.programirame.athena.client;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import org.programirame.athena.models.Client;
+import org.programirame.athena.model.Clients;
 
 /**
  * Contains all the elements to display basic Client info.
@@ -11,41 +12,46 @@ import org.programirame.athena.models.Client;
  */
 public class ClientInfoSection extends FormLayout {
 
-    private TextField nameTextField;
-    private TextField surnameTextField;
-    private TextField taxNumberTextField;
-    private TextField uidTextField;
+    private Label nameTextLabel;
+    private Label surnameLabel;
+    private Label taxNumberLabel;
+    private Label uidLabel;
 
     public ClientInfoSection() {
-        nameTextField = new TextField("Name");
+        nameTextLabel = new Label();
+        nameTextLabel.setCaption("Name");
 
-        surnameTextField = new TextField("Surname");
-        surnameTextField.setIcon(FontAwesome.USER);
+        surnameLabel = new Label();
+        surnameLabel.setCaption("Surname");
+        surnameLabel.setIcon(FontAwesome.USER);
 
-        uidTextField = new TextField("UID");
-        taxNumberTextField = new TextField("Tax Number");
+        uidLabel = new Label();
+        uidLabel.setCaption("UID");
+
+        taxNumberLabel = new Label();
+        taxNumberLabel.setCaption("Tax Number");
     }
 
-    public void refreshClientInfo(Client client) {
-        nameTextField.setValue(client.getName());
-        surnameTextField.setValue(client.getSurname());
+    public void refreshClientInfo(Clients client) {
+        nameTextLabel.setValue(client.getName());
+        surnameLabel.setValue(client.getSurname());
 
-        uidTextField.setValue(client.getUid());
-        uidTextField.setIcon(FontAwesome.KEY);
+        uidLabel.setValue(client.getUid());
+        uidLabel.setIcon(FontAwesome.KEY);
 
-        taxNumberTextField.setValue(client.getTaxNumber());
-        taxNumberTextField.setIcon(FontAwesome.DOLLAR);
+        taxNumberLabel.setValue(client.getTaxNumber());
+        taxNumberLabel.setIcon(FontAwesome.DOLLAR);
 
-        addComponent(nameTextField);
+        addComponent(nameTextLabel);
 
         if(client.getType().getId() == 1) {
-            nameTextField.setIcon(FontAwesome.USER);
-            addComponent(surnameTextField);
-            addComponent(uidTextField);
+            nameTextLabel.setIcon(FontAwesome.USER);
+            addComponent(surnameLabel);
+            addComponent(uidLabel);
         } else {
-            nameTextField.setIcon(FontAwesome.BUILDING);
-            addComponent(uidTextField);
-            addComponent(taxNumberTextField);
+            nameTextLabel.setIcon(FontAwesome.BUILDING);
+            addComponent(uidLabel);
+            addComponent(taxNumberLabel);
         }
     }
 
